@@ -20,7 +20,7 @@ def get_gpu_info(keys=DEFAULT_ATTRIBUTES, no_units=True):
     [{'index': '0', 'uuid': 'GPU-88cff515-3e94-4d20-3f5d-5eaf73f59af0', 'name': 'Tesla V100-SXM2-16GB', 'timestamp': '2019/09/24 06:22:37.480', 'memory.total': '16152', 'memory.free': '14515', 'memory.used': '1637', 'utilization.gpu': '21', 'utilization.memory': '39'}, ...]
     """
     nu_opt = '' if not no_units else ',nounits'
-    cmd = f"nvidia-smi --query-gpu={','.join(keys)} --format=csv,noheader{nu_opt}"
+    cmd = "nvidia-smi --query-gpu={} --format=csv,noheader{}".format(','.join(keys), nu_opt)
     output = subprocess.check_output(cmd, shell=True)
     lines = output.decode().split('\n')
     lines = [line.strip() for line in lines if line.strip() != '']
