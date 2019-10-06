@@ -27,13 +27,24 @@ def get_gpu_info(keys=DEFAULT_ATTRIBUTES, no_units=True):
     return [{k: v for k, v in zip(keys, line.split(', '))} for line in lines]
 
 
-def get_vacant_gpu():
+def convert_metric_to_percent(gpu_info, metric):
+    if metric == 'util_cpu':
+        return float(gpu_info['utilization.gpu'])
+    elif metric == 'mem_usage':
+        return (float(gpu_info['memory.used']) / float(gpu_info['memory.total'])) * 100
+    else:
+        raise NotImplementedError("Unknown metric {}".format(metric))
+
+
+def get_vacant_gpu(metric='util_cpu'):
+    # metric: util_cpu, mem_usage
     vacant_gpu = '0'
-    min_gpu_utilization = 100
+    min_utilization_value = 100
     for gpu_info in get_gpu_info():
-        if float(gpu_info['utilization.gpu']) < min_gpu_utilization:
+        current_utilization = convert_metric_to_percent(gpu_info, metric)
+        if current_utilization < min_utilization_value:
             vacant_gpu = gpu_info['index']
-            min_gpu_utilization = float(gpu_info['utilization.gpu'])
+            min_utilization_value = current_utilization
     return vacant_gpu
 
 
