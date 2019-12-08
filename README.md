@@ -44,7 +44,7 @@ attachments=[
  ]
 ```
 
-### `slack_file_upload(filepath, channel, text, token=None, client=None)`
+### `slack_file_upload(filepath, token, channel, message=__file__, client=None)`
 ファイルをアップロードするためのプログラム．
 
 `pip install slackclient` が必要．詳細はwikiをみていただきたい．http://is/pukiwiki/index.php?morimoto%2Fmemo

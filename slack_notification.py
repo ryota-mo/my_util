@@ -24,7 +24,7 @@ def slack_notification(text, webhook_url, username=None, **kwargs):
     requests.post(webhook_url, data=json.dumps(data))
 
 
-def slack_file_upload(filepath, channel, text=__file__, token=None, client=None):
+def slack_file_upload(filepath, token, channel, message=__file__, client=None):
     """
     Slack Notification
     params: filepath: file sended
@@ -44,4 +44,4 @@ def slack_file_upload(filepath, channel, text=__file__, token=None, client=None)
     c = is_file_or_raw_text(channel)
 
     # file upload
-    client.files_upload(channels=c, file=filepath, initial_comment=text)
+    client.files_upload(channels=c, file=filepath, initial_comment=message)
