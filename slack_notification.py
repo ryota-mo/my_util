@@ -2,13 +2,13 @@ import os
 import json
 
 
-def is_file_or_raw_text(input):
-    if os.path.isfile(input):
+def is_file_or_raw_text(_input):
+    if os.path.isfile(_input):
         # if input is file, read file
-        with open(input, 'r') as f:
+        with open(_input, 'r') as f:
             output = f.read().rstrip('\n')
     else:
-        output = input
+        output = _input
     return output
 
 
@@ -24,7 +24,13 @@ def slack_notification(text, webhook_url, username=None, **kwargs):
     requests.post(webhook_url, data=json.dumps(data))
 
 
-def slack_file_upload(filepath, channel, text, token=None, client=None):
+def slack_file_upload(filepath, channel, text=__file__, token=None, client=None):
+    """
+    Slack Notification
+    params: filepath: file sended
+    params: token: token strings or text file including token
+    params: channel: chennel ID strings or text file including chennel ID
+    """
     if token is None and client is None:
         raise ValueError("Both token and client are None.")
 
