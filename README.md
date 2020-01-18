@@ -9,6 +9,20 @@ os.environ["CUDA_VISIBLE_DEVICES"] = get_vacant_gpu()
 ```
 として利用可能．ただし，GPU利用率を見ているだけなのであまりに同時実行だと同じ場所が返ってくる可能性がある．
 
+## pdf2png.py
+インストールが必要
+
+```
+pip install pdf2image
+```
+
+pdfをpngに変換．
+
+```
+python pdf2png.py pdfpath --dpi 300
+```
+`--dpi`はオプション．デフォルトは300で，DPIを指定する．出力先はpdfと同じディレクトリ
+
 ## slack_notification.py
 ### `slack_notification(text, webhook_url, username=None, **kwargs)`
 
