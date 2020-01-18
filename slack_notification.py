@@ -7,6 +7,8 @@ def is_file_or_raw_text(_input):
         # if input is file, read file
         with open(_input, 'r') as f:
             output = f.read().rstrip('\n')
+    elif os.path.isdir(_input):
+        raise IsADirectoryError(f"Have to input file or text, but you input {_input}")
     else:
         output = _input
     return output
