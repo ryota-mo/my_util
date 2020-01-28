@@ -1,9 +1,10 @@
 import csv
 from pathlib import Path
+import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def import_motive_csv(csvpath, datatype=[], hz=None, save=False, interpolate=False):
+def import_motive_csv(csvpath, datatype=[], hz=None, save=False, interpolate=False, show=False):
     with open(csvpath, 'r') as f:
         reader = csv.reader(f)
         for i, row in enumerate(reader):
@@ -54,6 +55,20 @@ def import_motive_csv(csvpath, datatype=[], hz=None, save=False, interpolate=Fal
     if hz is not None:
         df = df[(df["Time (Seconds)"]*hz).is_integer()]
 
+    if show is not False:
+        fig = plt.figure()
+        plt.title(show)
+        plt.grid()
+
+        plt.plot(list(range(len(df))), df[show], color="r", label=show)
+        plt.xlabel("steps")
+        if "Position" in show:
+            ylabel = show.split("_")[-1] + " [m]"
+        if "Rotation" in show:
+            ylabel = show.split("_")[-1]
+        plt.ylabel(ylabel)
+        plt.show()
+
     if save:
         p = Path(csvpath)
         filename = p.stem
@@ -74,8 +89,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('csvpath')
     parser.add_argument('-t', '--datatype', nargs=2, default=["Position", "Rotation"], choices=["Position", "Rotation"])
-    parser.add_argument('-i', '--interpolate', action='store_true')
+    parser.add_argument('-in', '--interpolate', action='store_true')
     parser.add_argument('-s', '--save', action='store_true')
+    parser.add_argument('-sh', '--show', default=False)
     parser.add_argument('--hz', type=int, help='Hz')
     args = parser.parse_args()
 
@@ -90,5 +106,4 @@ if __name__ == '__main__':
     print(f"Extract data: {args.datatype}")
 
     for csvfile in csvlist:
-        print(csvfile)
-        import_motive_csv(csvfile, args.datatype, args.hz, args.save, args.interpolate)
+        import_motive_csv(csvfile, args.datatype, args.hz, args.save, args.interpolate, args.show)
