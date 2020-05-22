@@ -28,8 +28,10 @@ def main(pdffile, page=None, pages=None):
         for obj in xObject:
             if xObject[obj]['/Subtype'] == '/Image':
                 size = (xObject[obj]['/Width'], xObject[obj]['/Height'])
-                data = xObject[obj].getData()
-                # data = xObject[obj]._dataじゃないとだめなこともある？
+                try:
+                    data = xObject[obj].getData()
+                except:
+                    data = xObject[obj]._data  # じゃないとだめなこともある？
                 if xObject[obj]['/ColorSpace'] == '/DeviceRGB':
                     mode = "RGB"
                 else:
