@@ -36,7 +36,7 @@ def convert_metric_to_percent(gpu_info, metric):
         raise NotImplementedError("Unknown metric {}".format(metric))
 
 
-def get_vacant_gpu(metric='util_cpu'):
+def get_vacant_gpu(metric='mem_usage'):
     # metric: util_cpu, mem_usage
     vacant_gpu = '0'
     min_utilization_value = 100
