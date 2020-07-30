@@ -1,5 +1,7 @@
 import os
 import json
+import requests
+import slack
 
 
 def is_file_or_raw_text(_input):
@@ -15,7 +17,6 @@ def is_file_or_raw_text(_input):
 
 
 def slack_notification(text, webhook_url, username=None, **kwargs):
-    import requests
     webhook_url = is_file_or_raw_text(webhook_url)
     data = {'text': text, 'link_names': 1}
     if username:
@@ -35,8 +36,6 @@ def slack_file_upload(filepath, token, channel, message=__file__, client=None):
     """
     if token is None and client is None:
         raise ValueError("Both token and client are None.")
-
-    import slack
 
     if client is None:
         t = is_file_or_raw_text(token)
