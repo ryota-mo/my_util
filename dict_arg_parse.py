@@ -1,6 +1,16 @@
 import argparse
 
 
+def change_type(string):
+    try:
+        ret = float(string)
+    except ValueError:
+        return string
+    if ret.is_integer():
+        return int(ret)
+    return ret
+
+
 class StoreDictKeyPair(argparse.Action):
     """
     For argparse
@@ -16,5 +26,5 @@ class StoreDictKeyPair(argparse.Action):
             param_dict = {}
         for kv in values:
             k, v = kv.split("=")
-            param_dict[k] = v
+            param_dict[k] = change_type(v)
         setattr(namespace, self.dest, param_dict)
