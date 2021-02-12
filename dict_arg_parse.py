@@ -1,7 +1,15 @@
+import re
+from typing import List
 import argparse
 
 
-def change_type(string):
+def change_type(string: str):
+    if string[0] == '[' and string[-1] == ']':
+        return convert_str_to_list(string)
+    if string == 'True':
+        return True
+    if string == 'False':
+        return False
     try:
         ret = float(string)
     except ValueError:
@@ -9,6 +17,16 @@ def change_type(string):
     if ret.is_integer():
         return int(ret)
     return ret
+
+
+def convert_str_to_list(text: str) -> List[str]:
+    """
+    target文字列を上手くリスト化する
+    [1,2]みたいな文字列をリスト化する
+    """
+    if text == '[]':
+        return []
+    return re.sub(r"['|\[|\]| ]", '', text).split(',')
 
 
 class StoreDictKeyPair(argparse.Action):
