@@ -6,6 +6,8 @@ import argparse
 def change_type(string: str):
     if string[0] == '[' and string[-1] == ']':
         return convert_str_to_list(string)
+    if string[0] == '{' and string[-1] == '}':
+        return convert_str_to_dict(string)
     if string == 'True':
         return True
     if string == 'False':
@@ -26,7 +28,58 @@ def convert_str_to_list(text: str) -> List[str]:
     """
     if text == '[]':
         return []
-    return re.sub(r"['|\[|\]| ]", '', text).split(',')
+    # try:
+    #     ret = eval(text)
+    # except SyntaxError:
+    if text[1] != "[":
+        return re.sub(r"['|\[|\]| ]", '', text).split(',')
+    else:
+        tmp = ['["' + x[1:].replace(',', '","') + '"]' for x in text[1:-1].split('],') if len(x) > 0]
+        ret = [eval(x) for x in tmp]
+    return ret
+
+    # for a in text[1:-1].split(','):
+    #     print(a)
+    #     try:
+    #         eval(a)
+    #         ret.append(a)
+    #     except Exception:
+    #         ret.append(f'"{a}"')
+    # print(ret)
+    # return ret
+
+
+def add_double_quote(string: str):
+    tmp = string.replace('{', '{"').replace(',', '","').replace('}', '"}')
+    n = 0
+    while True:
+        if tmp[n] == ",":
+            m = tmp[:n].rfind(":")
+            tmp = tmp[:m] + '":"' + tmp[m + 1:]
+            n += 2
+        n += 1
+        if n >= len(tmp):
+            break
+    m = tmp.rfind(":")
+    tmp = tmp[:m] + '":"' + tmp[m + 1:]
+    return tmp
+
+
+def convert_str_to_dict(text: str) -> dict:
+    """
+    target文字列を上手くリスト化する
+    [1,2]みたいな文字列をリスト化する
+    """
+    if text == '{}':
+        return dict()
+    # return re.sub(r"['|\[|\]| ]", '', text).split(',')
+    try:
+        ret = eval(text)
+    except SyntaxError:
+        text = add_double_quote(text)
+        ret = eval(text)
+    assert isinstance(ret, dict), (type(ret), ret)
+    return ret
 
 
 class StoreDictKeyPair(argparse.Action):
@@ -43,6 +96,6 @@ class StoreDictKeyPair(argparse.Action):
         if param_dict is None:
             param_dict = {}
         for kv in values:
-            k, v = kv.split("=")
+            k, v = kv.split("=", 1)
             param_dict[k] = change_type(v)
         setattr(namespace, self.dest, param_dict)
