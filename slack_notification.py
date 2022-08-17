@@ -46,3 +46,22 @@ def slack_file_upload(filepath, token, channel, message=__file__, client=None):
 
     # file upload
     client.files_upload(channels=c, file=filepath, initial_comment=message)
+
+
+def slack_chat_post(text, token, channel, client=None):
+    """
+    Slack Notification
+    params: text: text
+    params: token: token strings or text file including token
+    params: channel: chennel ID strings or text file including chennel ID
+    """
+    if token is None and client is None:
+        raise ValueError("Both token and client are None.")
+
+    if client is None:
+        t = is_file_or_raw_text(token)
+        # make slack client
+        client = slack.WebClient(token=t)
+
+    c = is_file_or_raw_text(channel)
+    client.chat_postMessage(channel=c, text=text)
